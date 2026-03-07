@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mandados y Servicios a Domicilio</title>
+  <style>
+    /* ───────────── Reset & Variables ───────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #e63946;
+      --primary-dk:#c1121f;
+      --secondary: #f4a261;
+      --accent:    #2a9d8f;
+      --dark:      #1d3557;
+      --light:     #f8f9fa;
+      --card-bg:   #ffffff;
+      --shadow:    0 4px 20px rgba(0,0,0,.10);
+      --radius:    14px;
+      --font:      'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--light);
+      color: #333;
+      scroll-behavior: smooth;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ───────────── Top bar ───────────── */
+    .topbar {
+      background: var(--dark);
+      color: #fff;
+      font-size: .82rem;
+      text-align: center;
+      padding: 6px 20px;
+      letter-spacing: .4px;
+    }
+
+    /* ───────────── Header / Nav ───────────── */
+    header {
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .brand span { color: var(--dark); }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      font-size: .93rem;
+      font-weight: 600;
+      color: var(--dark);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+
+    .nav-cta {
+      background: var(--primary);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 50px;
+      transition: background .2s !important;
+    }
+    .nav-cta:hover { background: var(--primary-dk) !important; color: #fff; }
+
+    /* ───────────── Hero ───────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #457b9d 100%);
+      color: #fff;
+      padding: 80px 24px 70px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    }
+
+    .hero-inner { position: relative; max-width: 780px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+    .hero h1 em { color: var(--secondary); font-style: normal; }
+    .hero p {
+      font-size: clamp(.95rem, 2vw, 1.18rem);
+      opacity: .88;
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: .98rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(0,0,0,.18); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dk); }
+    .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.65); }
+    .btn-outline:hover { background: rgba(255,255,255,.12); }
+
+    /* ───────────── Stats strip ───────────── */
+    .stats {
+      background: var(--secondary);
+      padding: 22px 24px;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat strong { display: block; font-size: 1.55rem; font-weight: 900; color: var(--dark); }
+    .stat span { font-size: .82rem; font-weight: 600; color: #5a3e28; }
+
+    /* ───────────── Section wrapper ───────────── */
+    section { padding: 70px 24px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-title h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.3rem);
+      font-weight: 900;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .section-title p {
+      font-size: 1rem;
+      color: #666;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .divider {
+      width: 56px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 4px;
+      margin: 12px auto 0;
+    }
+
+    /* ───────────── Services cards ───────────── */
+    #servicios { background: #fff; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 28px;
+    }
+    .service-card {
+      background: var(--card-bg);
+      border: 1.5px solid #eee;
+      border-radius: var(--radius);
+      padding: 36px 28px 32px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: var(--accent);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .service-card:nth-child(2)::before { background: var(--primary); }
+    .service-card:nth-child(3)::before { background: var(--secondary); }
+    .service-card:nth-child(4)::before { background: #6a4c93; }
+    .service-card:nth-child(5)::before { background: #e76f51; }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(0,0,0,.13);
+      border-color: transparent;
+    }
+    .service-icon { font-size: 3rem; margin-bottom: 18px; }
+    .service-card h3 {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .service-card p {
+      font-size: .9rem;
+      color: #666;
+      line-height: 1.6;
+    }
+    .service-tag {
+      display: inline-block;
+      background: #f0f0f0;
+      color: #444;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-top: 14px;
+    }
+
+    /* ───────────── Menu / Food section ───────────── */
+    #menu { background: var(--light); }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 22px;
+    }
+    .menu-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .2s;
+    }
+    .menu-card:hover { transform: translateY(-4px); }
+    .menu-thumb {
+      width: 100%;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .mc-burger .menu-thumb  { background: linear-gradient(135deg,#f4a261,#e76f51); }
+    .mc-asada  .menu-thumb  { background: linear-gradient(135deg,#e63946,#c1121f); }
+    .mc-tacos  .menu-thumb  { background: linear-gradient(135deg,#f4d35e,#f4a261); }
+    .mc-pizza  .menu-thumb  { background: linear-gradient(135deg,#e63946,#f4a261); }
+    .mc-sushi  .menu-thumb  { background: linear-gradient(135deg,#2a9d8f,#264653); }
+    .mc-pollo  .menu-thumb  { background: linear-gradient(135deg,#e9c46a,#f4a261); }
+    .menu-info { padding: 14px 16px; }
+    .menu-info h4 { font-size: .98rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+    .menu-info p  { font-size: .82rem; color: #777; }
+    .menu-info .price { font-size: .88rem; font-weight: 700; color: var(--primary); margin-top: 6px; }
+
+    /* ───────────── How it works ───────────── */
+    #como-funciona { background: #fff; }
+    .steps {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .step {
+      text-align: center;
+      max-width: 220px;
+      position: relative;
+    }
+    .step-num {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 14px rgba(230,57,70,.35);
+    }
+    .step h4 { font-size: 1rem; font-weight: 800; color: var(--dark); margin-bottom: 7px; }
+    .step p  { font-size: .87rem; color: #666; line-height: 1.55; }
+    .step-arrow {
+      position: absolute;
+      right: -24px;
+      top: 22px;
+      font-size: 1.4rem;
+      color: #ccc;
+    }
+
+    /* ───────────── Promo / CTA Banner ───────────── */
+    .promo-banner {
+      background: linear-gradient(135deg, var(--primary) 0%, #c1121f 100%);
+      color: #fff;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .promo-banner h2 {
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+    .promo-banner p {
+      font-size: 1.05rem;
+      opacity: .9;
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+    .btn-white { background: #fff; color: var(--primary); font-weight: 800; }
+    .btn-white:hover { background: #f5f5f5; }
+
+    /* ───────────── Order Form ───────────── */
+    #pedir { background: var(--light); }
+    .form-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 42px 36px;
+      box-shadow: var(--shadow);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .form-row { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 9px;
+      font-size: .95rem;
+      font-family: var(--font);
+      transition: border-color .2s;
+      outline: none;
+      background: var(--light);
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 50px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { background: var(--primary-dk); transform: translateY(-2px); }
+
+    /* ───────────── Testimonials ───────────── */
+    #testimonios { background: #fff; }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 26px;
+    }
+    .testi-card {
+      background: var(--light);
+      border-radius: var(--radius);
+      padding: 28px 26px;
+      border-left: 4px solid var(--primary);
+    }
+    .testi-stars { color: #f4a261; font-size: 1.1rem; margin-bottom: 12px; }
+    .testi-card p { font-size: .92rem; color: #555; line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .testi-name { font-weight: 700; font-size: .9rem; color: var(--dark); }
+    .testi-loc  { font-size: .78rem; color: #888; }
+
+    /* ───────────── Footer ───────────── */
+    footer {
+      background: var(--dark);
+      color: #a8b8c8;
+      padding: 50px 24px 26px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 36px;
+      margin-bottom: 32px;
+    }
+    .footer-brand h3 { color: #fff; font-size: 1.2rem; margin-bottom: 10px; }
+    .footer-brand p  { font-size: .87rem; line-height: 1.6; }
+    .footer-col h4   { color: #fff; font-size: .95rem; margin-bottom: 14px; font-weight: 700; }
+    .footer-col ul   { list-style: none; }
+    .footer-col ul li { margin-bottom: 8px; font-size: .87rem; }
+    .footer-col ul li a { color: #a8b8c8; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--secondary); }
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: .82rem;
+    }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 26px;
+      right: 26px;
+      width: 58px; height: 58px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 20px rgba(37,211,102,.5);
+      z-index: 999;
+      transition: transform .2s;
+      cursor: pointer;
+    }
+    .whatsapp-float:hover { transform: scale(1.12); }
+
+    /* ───────────── Responsive ───────────── */
+    @media (max-width: 640px) {
+      .form-2col { grid-template-columns: 1fr; }
+      .form-card { padding: 28px 20px; }
+      .step-arrow { display: none; }
+      nav { justify-content: center; }
+      .nav-links { display: none; }
+      .stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top bar ───────────────────────────── -->
+<div class="topbar">
+  📍 Servicio disponible en tu zona &nbsp;|&nbsp; 📞 Llámanos o escríbenos al WhatsApp &nbsp;|&nbsp; ⏱ Entrega en 30-60 minutos
+</div>
+
+<!-- ── Header ────────────────────────────── -->
+<header>
+  <nav>
+    <div class="brand">🛵 <span>Mandados<em style="color:var(--primary)">Ya</em></span></div>
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#menu">Menú</a></li>
+      <li><a href="#como-funciona">¿Cómo funciona?</a></li>
+      <li><a href="#testimonios">Opiniones</a></li>
+      <li><a href="#pedir" class="nav-cta">Pedir ahora</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ── Hero ──────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">🚀 Servicio rápido a domicilio</span>
+    <h1>Envíos y mandados<br /><em>al instante, donde estés</em></h1>
+    <p>
+      Comida de restaurantes locales, lavado de auto, paquetes, tienda y más.
+      Pedimos, compramos y entregamos — ¡tú solo espera en casa!
+    </p>
+    <div class="hero-btns">
+      <a href="#pedir" class="btn btn-primary">Pedir ahora 🛵</a>
+      <a href="#servicios" class="btn btn-outline">Ver servicios</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats ─────────────────────────────── -->
+<div class="stats">
+  <div class="stat"><strong>+500</strong><span>Clientes felices</span></div>
+  <div class="stat"><strong>30 min</strong><span>Tiempo promedio</span></div>
+  <div class="stat"><strong>5⭐</strong><span>Calificación</span></div>
+  <div class="stat"><strong>7/7</strong><span>Días a la semana</span></div>
+</div>
+
+<!-- ── Servicios ─────────────────────────── -->
+<section id="servicios">
+  <div class="container">
+    <div class="section-title">
+      <h2>Nuestros Servicios</h2>
+      <p>Todo lo que necesitas, directo a tu puerta. Rápido, seguro y confiable.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon">🚗</div>
+        <h3>Auto Lavado a Domicilio</h3>
+        <p>
+          Lavado exterior o completo con productos de calidad.
+          Servicio rápido y profesional en la comodidad de tu casa.
+          No necesitas moverte.
+        </p>
+        <span class="service-tag">Lavado exterior · Lavado completo</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">📦</div>
+        <h3>Envíos Locales</h3>
+        <p>
+          Recogemos y entregamos paquetes dentro de la ciudad.
+          Ideal para enviar documentos, regalos o cualquier artículo.
+          Rápido y seguro.
+        </p>
+        <span class="service-tag">Paquetes · Documentos · Regalos</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🍔</div>
+        <h3>Mandado de Comida</h3>
+        <p>
+          Pedimos en tus restaurantes locales favoritos y te lo
+          llevamos caliente. Hamburguesas, carne asada, tacos, pizza y mucho más.
+        </p>
+        <span class="service-tag">Restaurantes locales · Antojitos</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🛒</div>
+        <h3>Mandados de Tienda</h3>
+        <p>
+          Compramos en OXXO, mini súper, farmacia o ferretería.
+          Solo dinos qué necesitas y lo gestionamos por ti.
+        </p>
+        <span class="service-tag">OXXO · Farmacia · Mini súper</span>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">🔧</div>
+        <h3>Mandado de Ferretería</h3>
+        <p>
+          ¿Necesitas herramientas, tornillos o material de construcción?
+          Compramos lo que necesites y lo llevamos directamente a tu obra o casa.
+        </p>
+        <span class="service-tag">Herramientas · Material · Refacciones</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Menú popular ───────────────────────── -->
+<section id="menu">
+  <div class="container">
+    <div class="section-title">
+      <h2>🍽️ Lo más pedido</h2>
+      <p>Antojitos y platillos de restaurantes locales que enviamos directo a ti.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-card mc-burger">
+        <div class="menu-thumb">🍔</div>
+        <div class="menu-info">
+          <h4>Hamburguesa Especial</h4>
+          <p>Doble carne, queso, cebolla y jalapeño</p>
+          <div class="price">Desde $85</div>
+        </div>
+      </div>
+
+      <div class="menu-card mc-asada">
+        <div class="menu-thumb">🥩</div>
+        <div class="menu-info">
+          <h4>Carne Asada</h4>
+          <p>Con guacamole, frijoles y tortillas de maíz</p>
+          <div class="price">Desde $120</div>
+        </div>
+      </div>
+
+      <div class="menu-card mc-tacos">
+        <div class="menu-thumb">🌮</div>
+        <div class="menu-info">
+          <h4>Tacos Norteños</h4>
+          <p>Orden de 5 tacos con salsa y limón</p>
+          <div class="price">Desde $75</div>
+        </div>
+      </div>
+
+      <div class="menu-card mc-pizza">
+        <div class="menu-thumb">🍕</div>
+        <div class="menu-info">
+          <h4>Pizza Familiar</h4>
+          <p>Ingredientes a elegir, masa artesanal</p>
+          <div class="price">Desde $145</div>
+        </div>
+      </div>
+
+      <div class="menu-card mc-sushi">
+        <div class="menu-thumb">🍣</div>
+        <div class="menu-info">
+          <h4>Sushi Roll</h4>
+          <p>Rollos especiales del restaurante local</p>
+          <div class="price">Desde $110</div>
+        </div>
+      </div>
+
+      <div class="menu-card mc-pollo">
+        <div class="menu-thumb">🍗</div>
+        <div class="menu-info">
+          <h4>Pollo a la Brasa</h4>
+          <p>Medio pollo con papas y ensalada</p>
+          <div class="price">Desde $95</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Cómo funciona ──────────────────────── -->
+<section id="como-funciona">
+  <div class="container">
+    <div class="section-title">
+      <h2>¿Cómo funciona?</h2>
+      <p>Tres pasos sencillos para recibir lo que necesitas en casa.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Haz tu pedido</h4>
+        <p>Llena el formulario o escríbenos por WhatsApp con todos los detalles de tu mandado.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Confirmamos y salimos</h4>
+        <p>Te confirmamos el costo estimado y asignamos un repartidor de inmediato.</p>
+        <span class="step-arrow">→</span>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Recibe en casa</h4>
+        <p>Tu pedido llega directamente a tu puerta. ¡Así de fácil y rápido!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Promo banner ───────────────────────── -->
+<div class="promo-banner">
+  <h2>🎉 ¡Primer mandado con 20% de descuento!</h2>
+  <p>Regístrate hoy y recibe tu primera entrega con descuento especial. Aplica para cualquier servicio.</p>
+  <a href="#pedir" class="btn btn-white">Aprovechar oferta</a>
+</div>
+
+<!-- ── Formulario de pedido ───────────────── -->
+<section id="pedir">
+  <div class="container">
+    <div class="section-title">
+      <h2>Haz tu Pedido</h2>
+      <p>Completa el formulario y nos ponemos en contacto contigo de inmediato.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="form-card">
+      <form onsubmit="handleOrder(event)">
+        <div class="form-2col">
+          <div class="form-row">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-row">
+            <label for="telefono">Teléfono / WhatsApp</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="+52 (xxx) xxx-xxxx" inputmode="tel" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="servicio">Tipo de servicio</label>
+          <select id="servicio" name="servicio" required>
+            <option value="" disabled selected>Selecciona un servicio...</option>
+            <option value="comida">🍔 Mandado de comida (restaurante)</option>
+            <option value="tienda">🛒 Mandado de tienda (OXXO, súper, farmacia)</option>
+            <option value="ferreteria">🔧 Mandado de ferretería</option>
+            <option value="paquete">📦 Envío local de paquete</option>
+            <option value="autolavado">🚗 Auto lavado a domicilio</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="direccion">Dirección de entrega</label>
+          <input type="text" id="direccion" name="direccion" placeholder="Calle, número, colonia" required />
+        </div>
+        <div class="form-row">
+          <label for="detalle">Detalle del pedido</label>
+          <textarea id="detalle" name="detalle" placeholder="Describe lo que necesitas (restaurante, lista de productos, etc.)"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">📲 Enviar pedido por WhatsApp</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonios ────────────────────────── -->
+<section id="testimonios">
+  <div class="container">
+    <div class="section-title">
+      <h2>Lo que dicen nuestros clientes</h2>
+      <p>Opiniones reales de personas en tu comunidad.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="testimonials-grid">
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p>"Pedí una hamburguesa del restaurante de la esquina y llegó en menos de 25 minutos, ¡caliente y perfecta! Definitivamente lo volvería a usar."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div>
+            <div class="testi-name">María López</div>
+            <div class="testi-loc">📍 Col. Centro</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p>"Me lavaron el carro en la entrada de mi casa. Quedó impecable y ni tuve que moverme. Super recomendado el servicio de autolavado."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">C</div>
+          <div>
+            <div class="testi-name">Carlos Reyes</div>
+            <div class="testi-loc">📍 Fracc. Las Palmas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p>"Necesitaba tornillos de la ferretería y no podía salir. Me los trajeron en 20 minutos. Excelente servicio, precios justos y muy atentos."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Ana García</div>
+            <div class="testi-loc">📍 Col. Jardines</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>🛵 MandadosYa</h3>
+      <p>Tu plataforma de confianza para envíos, comida y mandados locales. Rápido, seguro y a tu puerta.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Servicios</h4>
+      <ul>
+        <li><a href="#servicios">Auto lavado a domicilio</a></li>
+        <li><a href="#servicios">Envíos locales</a></li>
+        <li><a href="#servicios">Mandado de comida</a></li>
+        <li><a href="#servicios">Mandados de tienda</a></li>
+        <li><a href="#servicios">Mandado de ferretería</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Horarios</h4>
+      <ul>
+        <li>Lunes – Viernes: 8am – 10pm</li>
+        <li>Sábado: 9am – 10pm</li>
+        <li>Domingo: 10am – 8pm</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li>📲 WhatsApp disponible</li>
+        <li>📍 Servicio local</li>
+        <li>⚡ Respuesta inmediata</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 MandadosYa — Todos los derechos reservados</span>
+    <span>Hecho con ❤️ para tu comunidad</span>
+  </div>
+</footer>
+
+<!-- ── WhatsApp float button ──────────────── -->
+<!-- TODO: Replace 52XXXXXXXXXX with the actual business WhatsApp number (e.g. 521234567890) -->
+<a class="whatsapp-float" href="https://wa.me/52XXXXXXXXXX?text=Hola%2C%20quiero%20hacer%20un%20pedido" title="Escríbenos por WhatsApp" target="_blank" rel="noopener noreferrer">💬</a>
+
+<script>
+  function handleOrder(e) {
+    e.preventDefault();
+    const nombre   = document.getElementById('nombre').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const servicio = document.getElementById('servicio').options[document.getElementById('servicio').selectedIndex].text;
+    const direccion = document.getElementById('direccion').value.trim();
+    const detalle  = document.getElementById('detalle').value.trim();
+
+    const msg = encodeURIComponent(
+      `¡Hola! Quiero hacer un pedido:\n\n` +
+      `👤 Nombre: ${nombre}\n` +
+      `📞 Teléfono: ${telefono}\n` +
+      `🛵 Servicio: ${servicio}\n` +
+      `📍 Dirección: ${direccion}\n` +
+      `📝 Detalle: ${detalle || 'Sin detalle adicional'}`
+    );
+    // TODO: Replace 52XXXXXXXXXX with the actual business WhatsApp number (e.g. 521234567890)
+    window.open(`https://wa.me/52XXXXXXXXXX?text=${msg}`, '_blank', 'noopener,noreferrer');
+  }
+</script>
+
+</body>
+</html>
